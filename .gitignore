@@ -1,0 +1,6 @@
+# Environment varibales
+.env*
+!.env*.example
+
+service-account-api
+main

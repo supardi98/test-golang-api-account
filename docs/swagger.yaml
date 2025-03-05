@@ -1,0 +1,257 @@
+basePath: /
+definitions:
+  dto.ErrorResponse:
+    properties:
+      remark:
+        type: string
+    type: object
+  dto.InputPostDaftar:
+    properties:
+      nama:
+        type: string
+      nik:
+        type: string
+      no_hp:
+        maxLength: 14
+        minLength: 10
+        type: string
+    required:
+    - nama
+    - nik
+    - no_hp
+    type: object
+  dto.InputPostTabung:
+    properties:
+      no_rekening:
+        type: string
+      nominal:
+        minimum: 1
+        type: integer
+    required:
+    - no_rekening
+    - nominal
+    type: object
+  dto.InputPostTarik:
+    properties:
+      no_rekening:
+        type: string
+      nominal:
+        minimum: 1
+        type: integer
+    required:
+    - no_rekening
+    - nominal
+    type: object
+  dto.ResponseGetSaldoByNoRekening:
+    properties:
+      saldo:
+        type: integer
+    type: object
+  dto.ResponsePostDaftar:
+    properties:
+      no_rekening:
+        type: string
+    type: object
+  dto.ResponsePostTabung:
+    properties:
+      saldo:
+        type: integer
+    type: object
+  dto.ResponsePostTarik:
+    properties:
+      saldo:
+        type: integer
+    type: object
+  models.Mutasi:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      nasabah_id:
+        type: integer
+      no_rekening:
+        type: string
+      nominal_tabung:
+        type: integer
+      nominal_tarik:
+        type: integer
+      saldo_akhir:
+        type: integer
+      saldo_awal:
+        type: integer
+      tipe_transaksi:
+        $ref: '#/definitions/models.TipeTransaksi'
+      updated_at:
+        type: string
+    type: object
+  models.TipeTransaksi:
+    enum:
+    - tabung
+    - tarik
+    type: string
+    x-enum-varnames:
+    - Tabung
+    - Tarik
+host: localhost:8080
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is a sample swagger for Fiber
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Service Account API
+  version: "1.0"
+paths:
+  /daftar:
+    post:
+      consumes:
+      - application/json
+      description: Membuat akun baru nasabah
+      parameters:
+      - description: Masukkan nama, nik (16 Digit, Angka) dan no_hp (9-14 Digit, Angka)
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.InputPostDaftar'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponsePostDaftar'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Membuat akun baru nasabah
+      tags:
+      - Daftar Nasabah
+  /mutasi/{no_rekening}:
+    get:
+      description: Melihat mutasi dari Rekening
+      parameters:
+      - description: Nomor Rekening
+        in: path
+        name: no_rekening
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Mutasi'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Melihat mutasi dari Rekening
+      tags:
+      - Melihat Mutasi
+  /saldo/{no_rekening}:
+    get:
+      description: Melihat saldo dari Rekening
+      parameters:
+      - description: Nomor Rekening
+        in: path
+        name: no_rekening
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponseGetSaldoByNoRekening'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Melihat saldo dari Rekening
+      tags:
+      - Melihat Saldo
+  /tabung:
+    post:
+      consumes:
+      - application/json
+      description: Menambah tabungan ke Rekening
+      parameters:
+      - description: Masukkan no_rekening, nominal (minimal 1)
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.InputPostTabung'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponsePostTabung'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Menambah tabungan ke Rekening
+      tags:
+      - Menambah Tabungan
+  /tarik:
+    post:
+      consumes:
+      - application/json
+      description: Menarik saldo dari Rekening
+      parameters:
+      - description: Masukkan no_rekening, nominal tarik (minimal 1)
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.InputPostTarik'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ResponsePostTarik'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Menarik saldo dari Rekening
+      tags:
+      - Menarik Saldo
+swagger: "2.0"

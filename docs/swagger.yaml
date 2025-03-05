@@ -95,7 +95,6 @@ definitions:
     x-enum-varnames:
     - Tabung
     - Tarik
-host: localhost:8080
 info:
   contact:
     email: fiber@swagger.io

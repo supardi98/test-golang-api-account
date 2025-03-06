@@ -52,7 +52,7 @@ func (cc *AuthController) PostDaftar(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, "Database error")
 	}
 
-	// Cek apakah NIK sudah digunakan
+	// Cek apakah NoHp sudah digunakan
 	var existingNoHp models.Nasabah
 	if err := cc.DB.Where(&models.Nasabah{NoHP: inputDaftar.NoHP}).First(&existingNoHp).Error; err == nil {
 		return fiber.NewError(fiber.StatusBadRequest, "No HP sudah digunakan.")

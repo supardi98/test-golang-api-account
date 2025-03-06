@@ -13,7 +13,7 @@ import (
 func GenerateRandomRekening() (*string, error) {
 	source := rand.NewSource(time.Now().UnixNano())
 	random := rand.New(source)
-	randomNumber := random.Intn(9000000000) + 1000000000 // random angka 8 digit
+	randomNumber := random.Intn(9000000000) + 1000000000 // random angka 10 digit
 
 	noRekening := strconv.Itoa(randomNumber)
 
